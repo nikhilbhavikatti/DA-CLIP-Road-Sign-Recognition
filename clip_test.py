@@ -14,9 +14,9 @@ class RoadSignClassifier:
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
         self.model = CLIPModel.from_pretrained(model_name).to(self.device)
 
-        if use_finetuned and os.path.exists("finetuned_da_clip.pth"):
-            print("\n>>> Loading fine-tuned weights from finetuned_da_clip.pth\n")
-            self.model.load_state_dict(torch.load("finetuned_da_clip.pth", map_location=self.device), strict=False)
+        if use_finetuned and os.path.exists("finetuned_multidomain_clip.pth"):
+            print("\n>>> Loading fine-tuned weights from finetuned_multidomain_clip.pth\n")
+            self.model.load_state_dict(torch.load("finetuned_multidomain_clip.pth", map_location=self.device), strict=False)
         else:
             print("\n>>> Using pretrained CLIP model without fine-tuning\n")
 
@@ -524,7 +524,7 @@ if __name__ == "__main__":
     classifier = RoadSignClassifier(use_finetuned=True)
 
     results_df = classifier.evaluate_directory(
-        directory="Road_Signs_Germany",
+        directory="Road_Signs_India",
         ground_truth=None,
         return_all=False
     )
