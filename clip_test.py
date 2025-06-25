@@ -6,7 +6,7 @@ from typing import List, Tuple, Dict, Optional
 import os
 import pandas as pd
 from matplotlib import colors as mcolors
-from prompts import prompts_india
+from prompts import prompts_india, prompts_germany, prompts_china
 from categories import road_sign_categories
 
 class RoadSignClassifier:
