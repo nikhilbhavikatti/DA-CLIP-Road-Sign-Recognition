@@ -76,28 +76,17 @@ def train_model(model, dataloader, processor, prompt_variations, categories):
             images = list(images)
             category_indices = category_indices.tolist()
 
-            # Build prompts from each domain for every sample
-            prompts_ind = [random.choice(prompt_variations['india'][i]) for i in category_indices]
-            prompts_ger = [random.choice(prompt_variations['germany'][i]) for i in category_indices]
-            prompts_chi = [random.choice(prompt_variations['china'][i]) for i in category_indices]
+            prompts = [random.choice(prompt_variations['india'][i]) for i in category_indices]
+            #prompts = [random.choice(prompt_variations['china'][i]) for i in category_indices]
+            #prompts = [random.choice(prompt_variations['germany'][i]) for i in category_indices]
 
-            # Tokenize
+            text_inputs = processor(text=prompts, return_tensors="pt", padding=True, truncation=True).to(DEVICE)
             image_inputs = processor(images=images, return_tensors="pt").to(DEVICE)
-            text_ind = processor(text=prompts_ind, return_tensors="pt", padding=True, truncation=True).to(DEVICE)
-            text_ger = processor(text=prompts_ger, return_tensors="pt", padding=True, truncation=True).to(DEVICE)
-            text_chi = processor(text=prompts_chi, return_tensors="pt", padding=True, truncation=True).to(DEVICE)
 
-            # Forward pass
             image_features = model.get_image_features(**image_inputs)
-            text_features_ind = model.get_text_features(**text_ind)
-            text_features_ger = model.get_text_features(**text_ger)
-            text_features_chi = model.get_text_features(**text_chi)
+            text_features = model.get_text_features(**text_inputs)
 
-            # Compute losses
-            loss_ind = clip_contrastive_loss(image_features, text_features_ind)
-            loss_ger = clip_contrastive_loss(image_features, text_features_ger)
-            loss_chi = clip_contrastive_loss(image_features, text_features_chi)
-            loss = (loss_ind + loss_ger + loss_chi) / 3
+            loss = clip_contrastive_loss(image_features, text_features, temperature=0.07)
 
             optimizer.zero_grad()
             loss.backward()
@@ -116,16 +105,16 @@ def load_training_data():
     classifier = RoadSignClassifier(use_finetuned=False)
     categories = classifier.categories
 
-    prompt_variations = {
-        'india': prompts_india,
-        'germany': prompts_germany,
-        'china': prompts_china
+    image_dirs = {
+        'india': "train_data_India_5"
+        #'china': "train_data_China_5"
+        #'germany': "train_data_Germany_5"
     }
 
-    image_dirs = {
-        'india': "train_data_India_5",
-        'germany': "train_data_Germany_5",
-        'china': "train_data_China_5"
+    prompt_variations = {
+        'india': prompts_india
+        #'china': prompts_china
+        #'germany': prompts_germany
     }
 
     dataset = MultiDomainRoadSignDataset(image_dirs, categories, prompt_variations)
