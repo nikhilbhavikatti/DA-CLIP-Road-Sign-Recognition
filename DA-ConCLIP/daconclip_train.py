@@ -7,17 +7,17 @@ from PIL import Image
 import os
 from typing import List, Dict
 import random
-from clip_test import RoadSignClassifier
+from daconclip_test import RoadSignClassifier
 from prompts import prompts_india, prompts_china, prompts_germany
 
 # Configuration
 MODEL_NAME = "openai/clip-vit-base-patch32"
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 BATCH_SIZE = 8
-EPOCHS = 5
+EPOCHS = 10
 LR = 1e-5
 WEIGHT_DECAY = 0.01
-SAVE_PATH = "finetuned_multidomain_clip.pth"
+SAVE_PATH = "finetuned_multidomain_clip_germany_art.pth"
 
 # Contrastive Loss
 def clip_contrastive_loss(image_features, text_features, temperature=1.0):
@@ -76,9 +76,9 @@ def train_model(model, dataloader, processor, prompt_variations, categories):
             images = list(images)
             category_indices = category_indices.tolist()
 
-            prompts = [random.choice(prompt_variations['india'][i]) for i in category_indices]
+            #prompts = [random.choice(prompt_variations['india'][i]) for i in category_indices]
             #prompts = [random.choice(prompt_variations['china'][i]) for i in category_indices]
-            #prompts = [random.choice(prompt_variations['germany'][i]) for i in category_indices]
+            prompts = [random.choice(prompt_variations['germany'][i]) for i in category_indices]
 
             text_inputs = processor(text=prompts, return_tensors="pt", padding=True, truncation=True).to(DEVICE)
             image_inputs = processor(images=images, return_tensors="pt").to(DEVICE)
@@ -106,15 +106,15 @@ def load_training_data():
     categories = classifier.categories
 
     image_dirs = {
-        'india': "train_data_India_5"
-        #'china': "train_data_China_5"
-        #'germany': "train_data_Germany_5"
+        #'india': "India/train_india_art"
+        #'china': "China/cn_train_art"
+        'germany': "Germany/train_germany_art"
     }
 
     prompt_variations = {
-        'india': prompts_india
+        #'india': prompts_india
         #'china': prompts_china
-        #'germany': prompts_germany
+        'germany': prompts_germany
     }
 
     dataset = MultiDomainRoadSignDataset(image_dirs, categories, prompt_variations)

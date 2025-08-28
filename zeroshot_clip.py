@@ -13,10 +13,10 @@ class RoadSignClassifier:
     def __init__(self, model_name: str = "openai/clip-vit-base-patch32", top_k: int = 10, batch_size: int = 32, use_finetuned: bool = True):
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
         self.model = CLIPModel.from_pretrained(model_name).to(self.device)
-
-        if use_finetuned and os.path.exists("finetuned_multidomain_clip.pth"):
-            print("\n>>> Loading fine-tuned weights from finetuned_multidomain_clip.pth\n")
-            self.model.load_state_dict(torch.load("finetuned_multidomain_clip.pth", map_location=self.device), strict=False)
+        ft_file = "finetuned_multidomain_clip_germany_art.pth"
+        if use_finetuned and os.path.exists(ft_file):
+            print("\n>>> Loading fine-tuned weights from finetuned model", ft_file ,"\n")
+            self.model.load_state_dict(torch.load(ft_file, map_location=self.device), strict=False)
         else:
             print("\n>>> Using pretrained CLIP model without fine-tuning\n")
 
@@ -24,7 +24,7 @@ class RoadSignClassifier:
         self.top_k = top_k
         self.batch_size = batch_size
         self.categories = road_sign_categories
-        self.prompt_variations = prompts_india
+        self.prompt_variations = prompts_germany
 
         # Initialize text features
         self._initialize_text_features()
@@ -524,7 +524,9 @@ if __name__ == "__main__":
     classifier = RoadSignClassifier(use_finetuned=True)
 
     results_df = classifier.evaluate_directory(
-        directory="Road_Signs_India",
+        directory="Germany/test_germany",
+        #directory="India/test_india",
+        #directory="China/cn_test",
         ground_truth=None,
         return_all=False
     )
@@ -549,6 +551,6 @@ if __name__ == "__main__":
         print(f"Top-{k} Accuracy: {acc:.2%} ({metrics_top_k['overall'][k]['correct']}/{metrics_top_k['overall'][k]['total']})")
     print("----------------------------------------------------------")
 
-    results_df.to_html("results_table.html")
+    #results_df.to_html("results_table.html")
     classifier.save_class_metrics_html(metrics, "road_sign_metrics.html")
-    metrics_top_k['summary'].to_html("road_sign_metrics_top_k.html")
+    metrics_top_k['summary'].to_html("road_sign_metrics_top_k_ft_art_ger_ger.html")

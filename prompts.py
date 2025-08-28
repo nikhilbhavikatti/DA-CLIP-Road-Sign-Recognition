@@ -70,13 +70,6 @@ prompts_india = [
         "Prohibits pedestrian access to this area",
         "Only prohibition sign featuring crossed-out human figure"
     ],
-    # Width Limit
-    [
-        "Red-bordered white Circle showing black measurement (e.g., 2m) between black horizontal triangular arrows pointing outward",
-        "Regulatory sign indicating maximum vehicle width with number flanked by left-right pointing triangular markers",
-        "Unlike height limit signs with vertical arrows, this has black horizontal triangular arrows on both sides of the width measurement",
-        "Shows metric width (e.g., 2.5m) between outward-pointing triangular markers, typically on a white background",
-    ],
     # Give Way
     [
         "Inverted red-bordered equilateral triangle pointing downward with pure white interior, no text or symbols",
@@ -126,13 +119,6 @@ prompts_india = [
         "Warning of wildlife crossing area ahead",
         "Only warning sign featuring animal figure in triangle"
     ],
-    # Narrow Roads Ahead
-    [
-        "A triangular red and white road sign with two black lines bent inward",
-        "Traffic warning sign with a red border and two black bent vertical lines",
-        "Red triangle sign showing narrowing lanes with black symbols",
-        "White background triangle sign with two black bent lines"
-    ],
     # Cycle Crossing
     [
         "Red-bordered triangle with black bicycle symbol",
@@ -174,27 +160,6 @@ prompts_india = [
         "Warning sign depicting car going down inclined road with base black triangle marker",
         "Triangular sign indicating steep downhill grade with vehicle silhouette moving downward",
         "White triangle with red border showing car moving down rightward slope from base black triangle"
-    ],
-    # Dip
-    [
-        "Red-bordered triangle with concave black road symbol",
-        "No text, only U-shaped depression on white",
-        "Warning of road depression ahead",
-        "Only sign showing concave road surface in triangle"
-    ],
-    # Left Turn
-    [
-        "Red-bordered triangle with curved black left arrow",
-        "No text, only bending arrow pointing left",
-        "Warning of sharp left curve ahead",
-        "Only warning sign with left-curving arrow in triangle"
-    ],
-    # Right Turn
-    [
-        "Red-bordered triangle with curved black right arrow",
-        "No text, only bending arrow pointing right",
-        "Warning of sharp right curve ahead",
-        "Only warning sign with right-curving arrow in triangle"
     ],
     # Hospital
     [
@@ -283,13 +248,6 @@ prompts_germany = [
         "Indicates that pedestrians are not allowed in this area",
         "You must find an alternative route or use a designated pedestrian area",
     ],
-    # Width Limit
-    [
-        "width limit",
-        "Circular sign with a border, a white center with a number indicating width limit and double arrows in left right direction",
-        "Indicates the maximum width allowed for vehicles passing through a narrow passage or under an overpass",
-        "Ensure your vehicle does not exceed this width limit to avoid collisions",
-    ],
     # Give Way
     [
         "give way",
@@ -339,13 +297,6 @@ prompts_germany = [
         "Indicates animals may cross the road",
         "Be alert for deer, cattle, or wildlife crossing ahead",
     ],
-    # Narrow Roads Ahead
-    [
-        "narrow road ahead",
-        "Triangle with narrow road symbol inside the triangle, which looks like two lines converging towards the top",
-        "Indicates that the road ahead is narrowing",
-        "Be cautious of oncoming traffic and adjust your speed accordingly",
-    ],
     # Cycle Crossing
     [
         "cycle crossing",
@@ -387,25 +338,6 @@ prompts_germany = [
         "Triangle with dip symbol inside the triangle, which looks like a downward slope with the degree of slope",
         "Indicates a dip or depression in the road ahead",
         "Be cautious of sudden changes in road elevation and adjust speed accordingly",
-    ],
-    # Dip
-    [   ##Need to be removed
-        "dip",
-        "Red-bordered triangle with concave black road symbol",
-        "No text, only U-shaped depression on white",
-        "Warning of road depression ahead",
-    ],
-    # Left Turn
-    [
-        "left turn",
-        "Tirangular sign with a left arrow inside, indicating a left turn ahead",
-        "Indicates that a left turn is coming up ahead",
-    ],
-    # Right Turn
-    [
-        "right turn",
-        "Triangle with right arrow inside, indicating a right turn ahead",
-        "Indicates that a right turn is coming up ahead",
     ],
     # Hospital
     [
@@ -484,12 +416,6 @@ prompts_china = [
         "the center shows a black figure walking with a red slash through it",
         "a no pedestrians sign",
     ],
-    # Width Limit
-    [
-        "a traffic sign with circular shape, white background, red border",
-        "the center shows a number followed by a letter 'm', with two black arrows pointing inward from the left and right sides",
-        "a width limit sign",
-    ],
     # Give Way
     [
         "traffic sign with a downward-pointing triangular shape, white background, red border",
@@ -532,12 +458,6 @@ prompts_china = [
         "the center shows a panda or a deer or a cow",
         "an animal crossing sign",
     ],
-    # Narrow Roads Ahead
-    [
-        "atraffic sign with a triangular shape, yellow background, and black border",
-        "the center symbol consists of vertical black lines that bend inward, may apply to both sides or just one side of the road",
-        "a narrow roads ahead sign",
-    ],
     # Cycle Crossing
     [
         "a traffic sign with triangular shape, yellow background, black border",
@@ -573,24 +493,6 @@ prompts_china = [
         "a traffic sign with triangular shape, yellow background, black border",
         "the center shows a slope, left side lower than the right side, and a white arrow pointing downwards to the left",
         "a steep descent sign",
-    ],
-    # Dip
-    [
-        "a traffic sign with triangular shape, yellow background, black border",
-        "the center shows a black rectangle with a smooth downward curve at the top",
-        "a dip sign",
-    ],
-    # Left Turn
-    [
-        "a traffic sign with circular shape, blue background, white border",
-        "the center shows a white arrow turning left at a 90-degree angle",
-        "a left turn sign",
-    ],
-    # Right Turn
-    [
-        "a traffic sign with circular shape, blue background, white border",
-        "the center shows a white arrow turning right at a 90-degree angle",
-        "a right turn sign",
     ],
     # Hospital
     [
