@@ -240,6 +240,7 @@ for epoch in range(num_epochs):
     domain2_images, class_idx_domain2, domain2_texts
     ) in tqdm(train_loader):
 
+  
         K = num_classes
         B = class_idx_domain1.size(0)
         domain1_images = domain1_images.to(device)
@@ -255,45 +256,49 @@ for epoch in range(num_epochs):
         similarity_domain1 = (100.0 * domain1_image_features @ domain1_text_features.T).softmax(dim=-1)
         similarity_domain2 = (100.0 * domain2_image_features @ domain2_text_features.T).softmax(dim=-1)
         
-        domain1_logits = domain1_classifier(torch.cat([domain1_text_features[class_idx_domain1], domain1_image_features], dim=0))
-        domain2_logits = domain2_classifier(torch.cat([domain2_text_features[class_idx_domain2], domain2_image_features], dim=0))
-
         one_hot_encoding_domain1 = torch.zeros(B*2, K, device=device)
         one_hot_encoding_domain1.scatter_(1, class_idx_domain1.unsqueeze(1), 1.0)
 
         one_hot_encoding_domain2 = torch.zeros(B*2, K, device=device)
         one_hot_encoding_domain2.scatter_(1, class_idx_domain2.unsqueeze(1), 1.0)
 
-        domain1_loss = domain1_loss_criterion(domain1_logits, one_hot_encoding_domain1)
-        domain2_loss = domain2_loss_criterion(domain2_logits, one_hot_encoding_domain2)
-
         classification_loss = (
             classifier_loss_criterion(similarity_domain1, class_idx) + 
             classifier_loss_criterion(similarity_domain2, class_idx)
         ) / 2
 
-        domain_descriminator_loss = compute_domain_descriminator_loss(domain1_logits, domain2_logits)
+        domain1_logits = domain1_classifier(torch.cat([domain1_text_features[class_idx_domain1], domain1_image_features], dim=0))
+        domain2_logits = domain2_classifier(torch.cat([domain2_text_features[class_idx_domain2], domain2_image_features], dim=0))
+
         category_confusion_loss = compute_category_confusion_loss(domain1_logits, domain2_logits, class_idx)
         domain_level_confusion_loss = compute_domain_level_confusion_loss(domain1_logits, domain2_logits)
-        # conditional_entropy_loss = compute_conditional_entropy_loss(domain1_logits, domain2_logits)
 
-        total_domain_descriminator_training_loss = domain1_loss + domain2_loss + domain_descriminator_loss
         attention_pool_loss = category_confusion_loss + domain_level_confusion_loss + classification_loss
-
-        optimizer_domain_desc.zero_grad()
-        total_domain_descriminator_training_loss.backward(retain_graph=True)
-        optimizer_domain_desc.step()
 
         optimizer_attnpool.zero_grad()
         attention_pool_loss.backward()
         optimizer_attnpool.step()
-
-        scheduler_cls.step()
         scheduler_attnpool.step()
+
+        domain1_logits_dom_disc = domain1_classifier(torch.cat([domain1_text_features[class_idx_domain1], domain1_image_features.detach()], dim=0))
+        domain2_logits_dom_disc = domain2_classifier(torch.cat([domain2_text_features[class_idx_domain2], domain2_image_features.detach()], dim=0))
+
+        domain1_loss = domain1_loss_criterion(domain1_logits_dom_disc, one_hot_encoding_domain1)
+        domain2_loss = domain2_loss_criterion(domain2_logits_dom_disc, one_hot_encoding_domain2)
+
+        domain_descriminator_loss = compute_domain_descriminator_loss(domain1_logits_dom_disc, domain2_logits_dom_disc)
+        # conditional_entropy_loss = compute_conditional_entropy_loss(domain1_logits, domain2_logits)
+
+        domain_descriminator_training_loss = domain1_loss + domain2_loss + domain_descriminator_loss
+
+        optimizer_domain_desc.zero_grad()
+        domain_descriminator_training_loss.backward(retain_graph=True)
+        optimizer_domain_desc.step()
+        scheduler_cls.step()
 
         total_loss += attention_pool_loss.item() + domain_descriminator_loss.item()
         total_classification_loss += classification_loss.item()
-        total_domain_descriminator_training_loss += domain_descriminator_loss.item()
+        total_domain_descriminator_training_loss += domain_descriminator_training_loss.item()
         total_category_confusion_loss += category_confusion_loss.item()
         total_domain_level_confusion_loss += domain_level_confusion_loss.item()
         total_domain1_loss += domain1_loss.item()
